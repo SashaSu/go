@@ -11,7 +11,7 @@ type topic struct {
 }
 
 type topicsApi interface {
-	AddTopic(mewTopic topic)
+	AddTopic(newTopic topic)
 	GetTopic(id uint64) topic
 	RemoveTopic(id uint16)
 }
@@ -31,12 +31,20 @@ func (api *myApi) GetTopic(id uint64) topic {
 
 // здесь необходимо реализовать метод AddTopic
 func (api *myApi) AddTopic(newTopic topic) bool {
+	if _, ok  := api.storage[newTopic.id]; ok {
+		return false
+	}
+	api.storage[newTopic.id] = newTopic
 	return true
 }
 
 // здесь необходимо реализовать метод RemoveTopic
 func (api *myApi) RemoveTopic(id uint64) bool {
-	return true
+	if _, ok  := api.storage[id]; ok {
+		delete(api.storage, id)
+		return true
+	}
+	return false
 }
 
 func main() {
